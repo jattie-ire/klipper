@@ -165,12 +165,13 @@ class IdleTimeout:
         idle_time = est_print_time - print_time
         if self.verbose_debug:
             logging.debug(
-                "[IdleTimeout] check_idle_timeout: eventtime={}, ".format(eventtime) +
-                "print_time={}, ".format(print_time) +
-                "est_print_time={}, ".format(est_print_time) +
-                "lookahead_empty={}, ".format(lookahead_empty) +
-                "idle_time={}, ".format(idle_time) +
-                "state={}".format(self.state)
+                ("[IdleTimeout] check_idle_timeout: "
+                 "eventtime={}, ".format(eventtime)
+                 + "print_time={}, ".format(print_time)
+                 + "est_print_time={}, ".format(est_print_time)
+                 + "lookahead_empty={}, ".format(lookahead_empty)
+                 + "idle_time={}, ".format(idle_time)
+                 + "state={}".format(self.state))
             )
         if not lookahead_empty or idle_time < 1.:
             if self.verbose_debug:
@@ -182,8 +183,8 @@ class IdleTimeout:
         if idle_time < self.idle_timeout:
             if self.verbose_debug:
                 logging.debug(
-                    "[IdleTimeout] Idle time {} < idle_timeout {} , waiting".format(
-                        idle_time, self.idle_timeout)
+                    ("[IdleTimeout] Idle time {} < idle_timeout {} , waiting"
+                     .format(idle_time, self.idle_timeout))
                 )
             return eventtime + self.idle_timeout - idle_time
         if self.gcode.get_mutex().test():
@@ -230,10 +231,11 @@ class IdleTimeout:
         buffer_time = min(2., print_time - est_print_time)
         if self.verbose_debug:
             logging.debug(
-                "[IdleTimeout] timeout_handler: print_time={},\n"
-                "  est_print_time={},\n"
-                "  lookahead_empty={},\n"
-                "  buffer_time={}".format(print_time, est_print_time, lookahead_empty, buffer_time)
+                ("[IdleTimeout] timeout_handler: "
+                 "print_time={},\n".format(print_time)
+                 + "  est_print_time={},\n".format(est_print_time)
+                 + "  lookahead_empty={},\n".format(lookahead_empty)
+                 + "  buffer_time={}".format(buffer_time))
             )
         if not lookahead_empty:
             if self.verbose_debug:
