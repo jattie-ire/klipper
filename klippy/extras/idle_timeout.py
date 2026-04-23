@@ -79,8 +79,8 @@ class IdleTimeout:
                     lookahead_empty = True
                     if self.verbose_debug:
                         logging.error(
-                            f"[IdleTimeout] Exception in get_status "
-                            f"toolhead.check_busy: {e}")
+                            "[IdleTimeout] Exception in get_status "
+                            "toolhead.check_busy: {}".format(e))
                 debug_vals = {
                     'print_time': print_time,
                     'est_print_time': est_print_time,
@@ -93,13 +93,13 @@ class IdleTimeout:
                 idle_time_remaining = self.idle_timeout
         if self.verbose_debug:
             logging.debug(
-                f"[IdleTimeout] get_status called: "
-                f"state={self.state}, "
-                f"printing_time={printing_time}, "
-                f"idle_timeout={self.idle_timeout}, "
-                f"idle_time_remaining={idle_time_remaining}, "
-                f"robust_delayed_gcode={self.robust_delayed_gcode}, "
-                f"debug_vals={debug_vals}"
+                "[IdleTimeout] get_status called: "
+                "state={}, ".format(self.state) +
+                "printing_time={}, ".format(printing_time) +
+                "idle_timeout={}, ".format(self.idle_timeout) +
+                "idle_time_remaining={}, ".format(idle_time_remaining) +
+                "robust_delayed_gcode={}, ".format(self.robust_delayed_gcode) +
+                "debug_vals={}".format(debug_vals)
             )
         status = {
             "state": self.state,
@@ -128,8 +128,8 @@ class IdleTimeout:
     def transition_idle_state(self, eventtime):
         if self.verbose_debug:
             logging.debug(
-                f"[IdleTimeout] transition_idle_state called at {eventtime}, "
-                f"current state={self.state}"
+                "[IdleTimeout] transition_idle_state called at {}, "
+                "current state={}".format(eventtime, self.state)
             )
         self.state = "Printing"
         try:
@@ -140,16 +140,16 @@ class IdleTimeout:
             self.state = "Ready"
             if self.verbose_debug:
                 logging.debug(
-                    f"[IdleTimeout] Exception in idle_gcode, "
-                    f"state set to Ready"
+                    "[IdleTimeout] Exception in idle_gcode, "
+                    "state set to Ready"
                 )
             return eventtime + 1.
         print_time = self.toolhead.get_last_move_time()
         self.state = "Idle"
         if self.verbose_debug:
             logging.debug(
-                f"[IdleTimeout] State transitioned to Idle, "
-                f"print_time={print_time}"
+                "[IdleTimeout] State transitioned to Idle, "
+                "print_time={}".format(print_time)
             )
         self.printer.send_event(
             "idle_timeout:idle",
@@ -165,12 +165,12 @@ class IdleTimeout:
         idle_time = est_print_time - print_time
         if self.verbose_debug:
             logging.debug(
-                f"[IdleTimeout] check_idle_timeout: eventtime={eventtime}, "
-                f"print_time={print_time},\n"
-                f"  est_print_time={est_print_time},\n"
-                f"  lookahead_empty={lookahead_empty},\n"
-                f"  idle_time={idle_time},\n"
-                f"  state={self.state}"
+                "[IdleTimeout] check_idle_timeout: eventtime={}, ".format(eventtime) +
+                "print_time={}, ".format(print_time) +
+                "est_print_time={}, ".format(est_print_time) +
+                "lookahead_empty={}, ".format(lookahead_empty) +
+                "idle_time={}, ".format(idle_time) +
+                "state={}".format(self.state)
             )
         if not lookahead_empty or idle_time < 1.:
             if self.verbose_debug:
@@ -182,8 +182,8 @@ class IdleTimeout:
         if idle_time < self.idle_timeout:
             if self.verbose_debug:
                 logging.debug(
-                    f"[IdleTimeout] Idle time {idle_time} < idle_timeout "
-                    f"{self.idle_timeout}, waiting"
+                    "[IdleTimeout] Idle time {} < idle_timeout {} , waiting".format(
+                        idle_time, self.idle_timeout)
                 )
             return eventtime + self.idle_timeout - idle_time
         if self.gcode.get_mutex().test():
@@ -202,8 +202,8 @@ class IdleTimeout:
     def timeout_handler(self, eventtime):
         if self.verbose_debug:
             logging.debug(
-                f"[IdleTimeout] timeout_handler called: eventtime={eventtime}, "
-                f"state={self.state}"
+                "[IdleTimeout] timeout_handler called: eventtime={}, "
+                "state={}".format(eventtime, self.state)
             )
         if self.printer.is_shutdown():
             if self.verbose_debug:
@@ -230,10 +230,10 @@ class IdleTimeout:
         buffer_time = min(2., print_time - est_print_time)
         if self.verbose_debug:
             logging.debug(
-                f"[IdleTimeout] timeout_handler: print_time={print_time},\n"
-                f"  est_print_time={est_print_time},\n"
-                f"  lookahead_empty={lookahead_empty},\n"
-                f"  buffer_time={buffer_time}"
+                "[IdleTimeout] timeout_handler: print_time={},\n"
+                "  est_print_time={},\n"
+                "  lookahead_empty={},\n"
+                "  buffer_time={}".format(print_time, est_print_time, lookahead_empty, buffer_time)
             )
         if not lookahead_empty:
             if self.verbose_debug:
@@ -260,8 +260,8 @@ class IdleTimeout:
         self.last_idle_start_time = eventtime  # Set idle start time
         if self.verbose_debug:
             logging.debug(
-                f"[IdleTimeout] State transitioned to Ready, "
-                f"sending event idle_timeout:ready"
+                "[IdleTimeout] State transitioned to Ready, "
+                "sending event idle_timeout:ready"
             )
         self.printer.send_event(
             "idle_timeout:ready",
@@ -272,12 +272,12 @@ class IdleTimeout:
         # Only set state to Printing if toolhead is actually busy
         if self.verbose_debug:
             logging.debug(
-                f"[IdleTimeout] handle_sync_print_time called: "
-                f"curtime={curtime}, "
-                f"print_time={print_time}, "
-                f"est_print_time={est_print_time}, "
-                f"state={self.state}, "
-                f"robust_delayed_gcode={self.robust_delayed_gcode}"
+                "[IdleTimeout] handle_sync_print_time called: "
+                "curtime={}, ".format(curtime) +
+                "print_time={}, ".format(print_time) +
+                "est_print_time={}, ".format(est_print_time) +
+                "state={}, ".format(self.state) +
+                "robust_delayed_gcode={}".format(self.robust_delayed_gcode)
             )
         # Check if toolhead is busy
         try:
@@ -287,7 +287,7 @@ class IdleTimeout:
         except Exception as e:
             if self.verbose_debug:
                 logging.error(
-                    f"[IdleTimeout] Exception in check_busy: {e}")
+                    "[IdleTimeout] Exception in check_busy: {}".format(e))
             th_lookahead_empty = True
         # If robust_delayed_gcode is enabled, only transition to Printing
         # if toolhead is busy
@@ -312,8 +312,8 @@ class IdleTimeout:
         check_time = READY_TIMEOUT + print_time - est_print_time
         if self.verbose_debug:
             logging.debug(
-                f"[IdleTimeout] State transitioned to Printing, "
-                f"updating timer, check_time={check_time}"
+                "[IdleTimeout] State transitioned to Printing, "
+                "updating timer, check_time={}".format(check_time)
             )
         self.reactor.update_timer(
             self.timeout_timer,
@@ -329,8 +329,8 @@ class IdleTimeout:
         self.idle_timeout = timeout
         if self.verbose_debug:
             logging.debug(
-                f"[IdleTimeout] cmd_SET_IDLE_TIMEOUT called: "
-                f"timeout set to {timeout}"
+                "[IdleTimeout] cmd_SET_IDLE_TIMEOUT called: "
+                "timeout set to {}".format(timeout)
             )
         gcmd.respond_info(
             "idle_timeout: Timeout set to %.2f s" % (timeout,),
@@ -339,8 +339,8 @@ class IdleTimeout:
             checktime = self.reactor.monotonic() + timeout
             if self.verbose_debug:
                 logging.debug(
-                    f"[IdleTimeout] State is Ready, "
-                    f"updating timer to {checktime}"
+                    "[IdleTimeout] State is Ready, "
+                    "updating timer to {}".format(checktime)
                 )
             self.reactor.update_timer(
                 self.timeout_timer,
